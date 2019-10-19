@@ -1,9 +1,6 @@
 /*
-This file has been generated through:
-yarn sequelize seed:generate --name admin-user
-
-And the record has been created inside the db gympoint through:
-yarn sequelize db:seed:all
+This seed didn't run.
+Data inserted through the first seed
 */
 const bcrypt = require('bcryptjs');
 
