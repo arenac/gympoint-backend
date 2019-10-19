@@ -1,26 +1,28 @@
-'use strict';
+/*
+This file has been generated through:
+yarn sequelize seed:generate --name admin-user
+
+And the record has been created inside the db gympoint through:
+yarn sequelize db:seed:all
+*/
+const bcrypt = require('bcryptjs');
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.bulkInsert('People', [{
-        name: 'John Doe',
-        isBetaMember: false
-      }], {});
-    */
+  up: queryInterface => {
+    return queryInterface.bulkInsert(
+      'users',
+      [
+        {
+          name: 'Administrator',
+          email: 'admin@gympoint.com',
+          password_hash: bcrypt.hashSync('123456', 8),
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      ],
+      {}
+    );
   },
 
-  down: (queryInterface, Sequelize) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.bulkDelete('People', null, {});
-    */
-  }
+  down: () => {},
 };
