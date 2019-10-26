@@ -85,7 +85,41 @@ class EnrollmentController {
       return res.status(401).json({ error: 'User not authorized' });
     }
 
-    return res.json();
+    const enrollment = await Enrollment.findByPk(req.params.id);
+
+    if (!enrollment) {
+      return res.status(401).json({ error: 'Enrollment does not exists' });
+    }
+
+    const { student_id, plan_id, start_date } = req.body;
+
+    if (isBefore(addDays(parseISO(start_date), 1), new Date())) {
+      return res.status(401).json({ error: 'You can not start in the past' });
+    }
+
+    const student = await Student.findByPk(student_id);
+
+    if (!student) {
+      return res.status(401).json({ error: 'Student does not exist' });
+    }
+
+    const plan = await Plan.findByPk(plan_id);
+
+    if (!plan) {
+      return res.status(401).json({ error: 'Plan does not exist' });
+    }
+    const price = plan.price * plan.duration;
+    const end_date = addMonths(parseISO(start_date), plan.duration);
+
+    await enrollment.update({
+      student_id,
+      plan_id,
+      start_date,
+      end_date,
+      price,
+    });
+
+    return res.json(enrollment);
   }
 
   async delete(req, res) {
