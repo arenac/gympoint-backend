@@ -7,6 +7,9 @@ import User from '../models/User';
 import Plan from '../models/Plan';
 import Student from '../models/Student';
 
+import Queue from '../../lib/Queue';
+import WellcomeEmail from '../jobs/WellcomeEmail';
+
 const isUserAdmin = async id =>
   User.findOne({
     where: { id, is_admin: true },
@@ -25,7 +28,16 @@ class EnrollmentController {
       },
     });
 
-    return res.json(enrollments);
+    const test = await Enrollment.findByPk(8, {
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name', 'email'],
+        },
+      ],
+    });
+    return res.json(test);
   }
 
   async store(req, res) {
@@ -63,12 +75,31 @@ class EnrollmentController {
     const price = plan.price * plan.duration;
     const end_date = addMonths(parseISO(start_date), plan.duration);
 
-    const enrollment = await Enrollment.create({
+    const { id } = await Enrollment.create({
       student_id,
       plan_id,
       start_date,
       end_date,
       price,
+    });
+
+    const enrollment = await Enrollment.findByPk(id, {
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name', 'email', 'age'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['title', 'duration'],
+        },
+      ],
+    });
+
+    Queue.add(WellcomeEmail.key, {
+      enrollment,
     });
 
     return res.json(enrollment);
