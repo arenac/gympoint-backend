@@ -12,8 +12,8 @@ const routes = new Router();
 
 routes.post('/sessions', SessionController.store);
 
-routes.get('/students/:id/checkings', CheckinController.index);
-routes.get('/students/:id/checkings', CheckinController.store);
+routes.get('/students/:id/checkins', CheckinController.index);
+routes.post('/students/:id/checkins', CheckinController.store);
 
 routes.use(authMiddleware);
 
