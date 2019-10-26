@@ -46,19 +46,19 @@ class EnrollmentController {
     const { student_id, plan_id, start_date } = req.body;
 
     if (isBefore(addDays(parseISO(start_date), 1), new Date())) {
-      return res.status(401).json({ error: 'You can not start in the past' });
+      return res.status(400).json({ error: 'You can not start in the past' });
     }
 
     const student = await Student.findByPk(student_id);
 
     if (!student) {
-      return res.status(401).json({ error: 'Student does not exist' });
+      return res.status(400).json({ error: 'Student does not exist' });
     }
 
     const plan = await Plan.findByPk(plan_id);
 
     if (!plan) {
-      return res.status(401).json({ error: 'Plan does not exist' });
+      return res.status(400).json({ error: 'Plan does not exist' });
     }
     const price = plan.price * plan.duration;
     const end_date = addMonths(parseISO(start_date), plan.duration);
@@ -88,25 +88,25 @@ class EnrollmentController {
     const enrollment = await Enrollment.findByPk(req.params.id);
 
     if (!enrollment) {
-      return res.status(401).json({ error: 'Enrollment does not exists' });
+      return res.status(400).json({ error: 'Enrollment does not exists' });
     }
 
     const { student_id, plan_id, start_date } = req.body;
 
     if (isBefore(addDays(parseISO(start_date), 1), new Date())) {
-      return res.status(401).json({ error: 'You can not start in the past' });
+      return res.status(400).json({ error: 'You can not start in the past' });
     }
 
     const student = await Student.findByPk(student_id);
 
     if (!student) {
-      return res.status(401).json({ error: 'Student does not exist' });
+      return res.status(400).json({ error: 'Student does not exist' });
     }
 
     const plan = await Plan.findByPk(plan_id);
 
     if (!plan) {
-      return res.status(401).json({ error: 'Plan does not exist' });
+      return res.status(400).json({ error: 'Plan does not exist' });
     }
     const price = plan.price * plan.duration;
     const end_date = addMonths(parseISO(start_date), plan.duration);
@@ -126,6 +126,14 @@ class EnrollmentController {
     if (!isUserAdmin(req.userId)) {
       return res.status(401).json({ error: 'User not authorized' });
     }
+
+    const enrollment = await Enrollment.findByPk(req.params.id);
+
+    if (!enrollment) {
+      return res.status(400).json({ error: 'Enrollment does not exists' });
+    }
+
+    await enrollment.destroy();
 
     return res.json();
   }
