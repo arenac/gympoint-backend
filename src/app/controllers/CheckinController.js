@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { addDays, subDays } from 'date-fns';
+import { subDays } from 'date-fns';
 import Student from '../models/Student';
 import Checkin from '../models/Checkin';
 

@@ -5,6 +5,8 @@ import StudentController from './app/controllers/StudentController';
 import PlanController from './app/controllers/PlanController';
 import EnrollmentController from './app/controllers/EnrollmentController';
 import CheckinController from './app/controllers/CheckinController';
+import HelpQuestionController from './app/controllers/HelpQuestionController';
+import HelpAnswerController from './app/controllers/HelpAnswerController';
 
 import authMiddleware from './app/midlewares/auth';
 
@@ -14,6 +16,9 @@ routes.post('/sessions', SessionController.store);
 
 routes.get('/students/:id/checkins', CheckinController.index);
 routes.post('/students/:id/checkins', CheckinController.store);
+
+routes.get('/students/:id/help-orders', HelpQuestionController.index);
+routes.post('/students/:id/help-orders', HelpQuestionController.store);
 
 routes.use(authMiddleware);
 
@@ -28,5 +33,9 @@ routes.get('/enrollments', EnrollmentController.index);
 routes.post('/enrollments', EnrollmentController.store);
 routes.put('/enrollments/:id', EnrollmentController.update);
 routes.delete('/enrollments/:id', EnrollmentController.delete);
+
+routes.get('/help-orders', HelpAnswerController.index);
+// route post as querired but i my view should be an update
+routes.post('/help-orders/:id/answer', HelpAnswerController.update);
 
 export default routes;
