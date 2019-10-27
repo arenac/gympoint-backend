@@ -28,16 +28,7 @@ class EnrollmentController {
       },
     });
 
-    const test = await Enrollment.findByPk(8, {
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['name', 'email'],
-        },
-      ],
-    });
-    return res.json(test);
+    return res.json(enrollments);
   }
 
   async store(req, res) {
