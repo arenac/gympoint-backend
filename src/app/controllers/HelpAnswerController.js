@@ -2,6 +2,9 @@ import * as Yup from 'yup';
 
 import HelpOrder from '../models/HelpOrder';
 import User from '../models/User';
+import Student from '../models/Student';
+import Queue from '../../lib/Queue';
+import HelpEmail from '../jobs/HelpEmail';
 
 const isUserAdmin = async id =>
   User.findOne({
@@ -44,9 +47,24 @@ class HelpAnswerController {
       return req.status(400).json({ error: 'Item does not exist' });
     }
 
+    // Can be updated may times
     help.update({
       answer,
       answer_at: new Date(),
+    });
+
+    const helpWithStudent = await HelpOrder.findByPk(id, {
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name', 'email'],
+        },
+      ],
+    });
+
+    Queue.add(HelpEmail.key, {
+      help: helpWithStudent,
     });
 
     return res.json(help);
