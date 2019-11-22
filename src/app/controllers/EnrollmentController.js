@@ -22,10 +22,7 @@ class EnrollmentController {
     }
 
     const enrollments = await Enrollment.findAll({
-      where: {
-        student_id: Number.parseInt(req.query.student_id, 10),
-        end_date: { [Op.gte]: new Date() },
-      },
+      attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
     });
 
     return res.json(enrollments);
