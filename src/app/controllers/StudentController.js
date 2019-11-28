@@ -1,9 +1,33 @@
+import { Op } from 'sequelize';
 import * as Yup from 'yup';
 
 import Student from '../models/Student';
 import User from '../models/User';
 
 class StudentController {
+  async index(req, res) {
+    const isUserAdmin = await User.findOne({
+      where: { id: req.userId, is_admin: true },
+    });
+
+    if (!isUserAdmin) {
+      return res.status(410).json({ error: 'User not authorized' });
+    }
+
+    const { student_name } = req.query;
+
+    const students = student_name
+      ? await Student.findAll({
+          where: {
+            name: {
+              [Op.like]: student_name,
+            },
+          },
+        })
+      : await Student.findAll();
+    return res.json(students);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
