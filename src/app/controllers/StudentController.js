@@ -66,6 +66,46 @@ class StudentController {
     );
     return res.json({ id, name, email, age, weight, height });
   }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string()
+        .email()
+        .required(),
+      age: Yup.number()
+        .required()
+        .moreThan(14),
+      weight: Yup.number().required(),
+      height: Yup.number().required(),
+    });
+
+    const isUserAdmin = await User.findOne({
+      where: { id: req.userId, is_admin: true },
+    });
+
+    if (!isUserAdmin) {
+      return res.status(410).json({ error: 'User not authorized' });
+    }
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    const { id: student_id } = req.params;
+
+    const student = await Student.findByPk(student_id);
+
+    if (!student) {
+      return res.status(400).json({ error: 'Student does not exist!' });
+    }
+
+    const { id, name, email, age, weight, height } = await student.update(
+      req.body
+    );
+
+    return res.json({ id, name, email, age, weight, height });
+  }
 }
 
 export default new StudentController();
