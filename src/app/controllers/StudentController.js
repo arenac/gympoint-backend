@@ -106,6 +106,28 @@ class StudentController {
 
     return res.json({ id, name, email, age, weight, height });
   }
+
+  async delete(req, res) {
+    const isUserAdmin = await User.findOne({
+      where: { id: req.userId, is_admin: true },
+    });
+
+    if (!isUserAdmin) {
+      return res.status(410).json({ error: 'User not authorized' });
+    }
+
+    const { id: student_id } = req.params;
+
+    const student = await Student.findByPk(student_id);
+
+    if (!student) {
+      return res.status(400).json({ error: 'Student does not exist!' });
+    }
+
+    student.destroy();
+
+    return res.json();
+  }
 }
 
 export default new StudentController();
