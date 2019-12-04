@@ -23,6 +23,18 @@ class EnrollmentController {
 
     const enrollments = await Enrollment.findAll({
       attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['id', 'name'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['id', 'title'],
+        },
+      ],
     });
 
     return res.json(enrollments);
