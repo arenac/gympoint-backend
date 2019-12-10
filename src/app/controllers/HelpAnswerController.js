@@ -20,12 +20,19 @@ class HelpAnswerController {
     const helpOrders = await HelpOrder.findAll({
       where: { answer: null },
       order: [['created_at', 'DESC']],
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name'],
+        },
+      ],
     });
 
     return res.json(helpOrders);
   }
 
-  async update(req, res) {
+  async store(req, res) {
     if (!isUserAdmin(req.userId)) {
       return res.status(401).json({ error: 'User not authorized' });
     }
