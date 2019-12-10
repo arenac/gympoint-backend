@@ -39,6 +39,6 @@ routes.delete('/enrollments/:id', EnrollmentController.delete);
 
 routes.get('/help-orders', HelpAnswerController.index);
 // route post as querired but i my view should be an update
-routes.post('/help-orders/:id/answer', HelpAnswerController.update);
+routes.post('/help-orders/:id/answer', HelpAnswerController.store);
 
 export default routes;
