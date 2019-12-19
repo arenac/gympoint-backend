@@ -13,6 +13,7 @@ import authMiddleware from './app/midlewares/auth';
 const routes = new Router();
 
 routes.post('/sessions', SessionController.store);
+routes.get('/sessions/students/:id', SessionController.index);
 
 routes.get('/students/:id/checkins', CheckinController.index);
 routes.post('/students/:id/checkins', CheckinController.store);
