@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import * as Yup from 'yup';
 
 import User from '../models/User';
+import Student from '../models/Student';
 
 import authConfig from '../../config/auth';
 
@@ -42,6 +43,18 @@ class SessionController {
         expiresIn: authConfig.expiresIn,
       }),
     });
+  }
+
+  async index(req, res) {
+    const { id: student_id } = req.params;
+
+    const student = await Student.findByPk(student_id);
+
+    if (!student) {
+      return res.status(400).json({ error: 'Invalid student ID' });
+    }
+
+    return res.json(student);
   }
 }
 
