@@ -1,3 +1,5 @@
+const { subDays } =  require('date-fns');
+
 /*
 This file has been generated through:
 yarn sequelize seed:generate --name admin-user
@@ -16,8 +18,8 @@ module.exports = {
           name: 'Administrator',
           email: 'admin@gympoint.com',
           password_hash: bcrypt.hashSync('123456', 8),
-          created_at: new Date(),
-          updated_at: new Date(),
+          created_at: subDays(new Date(), 10),
+          updated_at: subDays(new Date(), 10),
           is_admin: true,
         },
       ],
@@ -25,5 +27,7 @@ module.exports = {
     );
   },
 
-  down: () => {},
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.bulkDelete('users', null, {});
+  },
 };
