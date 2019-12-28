@@ -14,6 +14,7 @@ class HelpQuestionController {
 
     const helps = await HelpOrder.findAll({
       where: { student_id },
+      order: [['created_at', 'DESC']],
     });
 
     return res.json(helps);
